@@ -9,7 +9,7 @@ function main() {
 
 
     app.post('/cadastro', (request, response) => {
-        const prarametrosObrigatorios = ["numero","nome","idade","sexo","nascimento"]
+        const prarametrosObrigatorios = ["id","numero","nome","idade","sexo","nascimento"]
         for(const campo of prarametrosObrigatorios){
             if(!(campo in request.body)) {
                 return response.json({message: `campo ${campo} é obrigatório!`})
@@ -17,6 +17,7 @@ function main() {
         }
 
         const cadastro = {
+            id: request.body.id,
             numero: request.body.numero,
             nome: request.body.nome,
             idade: request.body.idade,
@@ -30,27 +31,22 @@ function main() {
     });
 
     app.delete('/deletar', (request, response) => {
-        const numeroADeletar = request.body.numero
+        const idADeletar = request.body.id
         for(const index in cadastrados){
              const item = cadastrados[index];
-            if (item.numero == numeroADeletar){    
+            if (item.id == idADeletar){    
                 cadastrados.splice(index, 1)
-                return response.json({message: `cadastro atualizado com sucesso: ${item.numero}`})
+                return response.json({message: `cadastro deletado com sucesso: `})
             }
         }
         return response.status(404).json({message: `não foi possível encontrar o telefone!`})
         
-
     })
 
     
-
-
-    
-
-
     app.get('/relatorio', (request, response) =>{
         return response.json(cadastrados)
+
     });
         
     app.listen(3000, () => {console.log("App iniciado escutando a porta 3000")});
